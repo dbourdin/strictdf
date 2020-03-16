@@ -1,3 +1,5 @@
+from collections import Counter
+
 import pandas as pd
 
 from utils.parsing_utils import is_bool
@@ -53,6 +55,38 @@ class StrictDataFrame:
         return [column for column in df.columns
                 if df[column].dtype == 'object']
 
+    def _infer_column_type(self, df_column):
+        """
+        This method will infer a column type based on the number of occurrences
+        of each type on that column.
+        :param df_column: pd.Series
+            The column whose type will be inferred.
+        :return: String, pd.Series
+            String with the inferred data type, and pd.Series column
+            with the parsed values.
+        """
+        type_counts = Counter()
+        df_column_copy = df_column.copy()
+        for index, value in enumerate(df_column_copy):
+            parsed_value = self._infer_value_type(value)
+            df_column_copy.iloc[index] = parsed_value
+
+            type_counts[type(parsed_value).__name__] += 1
+
+        if not type_counts:
+            return
+
+        # Corner case where 2 or more types have the same occurrence.
+        if (len(type_counts) > 1 and type_counts.most_common()[0][1]
+                == type_counts.most_common()[1][1]):
+            print(f'The two most common types '
+                  f'({type_counts.most_common()[0][0]} '
+                  f'{type_counts.most_common()[1][0]}) '
+                  f'have the same amount of occurrences on column '
+                  f'{df_column.name}')
+
+        return type_counts.most_common()[0][0], df_column_copy
+
     @staticmethod
     def _infer_value_type(value):
         """
@@ -84,3 +118,24 @@ class StrictDataFrame:
         :return: None
         """
         columns_to_parse = self._get_columns_to_parse(df)
+        for column in columns_to_parse:
+            column_type, parsed_column = self._infer_column_type(df[column])
+
+            new_column = pd.Series(pd.array(
+                [value if type(value).__name__ == column_type
+                 else None for value in parsed_column]),
+                index=parsed_column.index
+            )
+
+            df[column] = new_column
+            df = df.dropna()
+
+            if column_type == 'str':
+                self.dtypes[column] = column_type
+                continue
+            if column_type == 'int':
+                df[column] = df[column].astype('int64')
+
+                self.dtypes[column] = df[column].dtypes.__str__()
+
+        self.new_df = df
