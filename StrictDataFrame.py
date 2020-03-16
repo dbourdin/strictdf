@@ -35,6 +35,19 @@ class StrictDataFrame:
         self.new_df = df.dropna()
         self._parse_columns(self.new_df)
 
+    @staticmethod
+    def _get_columns_to_parse(df):
+        """
+        This will return a list of all columns that require parsing.
+        Columns with dtype object will require parsing
+        :param df: pd.DataFrame
+            The pandas DataFrame to extract unparsed columns from
+        :return: list
+            List containing the name of all columns to be parsed
+        """
+        return [column for column in df.columns
+                if df[column].dtype == 'object']
+
     def _parse_columns(self, df):
         """
         This will iterate through all the columns that require parsing, infer
@@ -44,3 +57,4 @@ class StrictDataFrame:
             correct dtype.
         :return: None
         """
+        columns_to_parse = self._get_columns_to_parse(df)
