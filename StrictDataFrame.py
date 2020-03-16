@@ -1,5 +1,10 @@
 import pandas as pd
 
+from utils.parsing_utils import is_bool
+from utils.parsing_utils import is_float
+from utils.parsing_utils import is_integer
+from utils.parsing_utils import str_to_bool
+
 
 class StrictDataFrame:
     """
@@ -47,6 +52,27 @@ class StrictDataFrame:
         """
         return [column for column in df.columns
                 if df[column].dtype == 'object']
+
+    @staticmethod
+    def _infer_value_type(value):
+        """
+        This method will receive a value, decide if it's a bool, int or float,
+        and return the parsed value.
+        :param value: object
+            Any type can be received here, and this will be used to evaluate if
+            the value is a bool, an int or a float.
+        :return: int/float/bool/object
+            It will return a value with the parsed type if it's int, float or
+            bool, or the same one it had if no type can be inferred.
+        """
+        if is_bool(value):
+            return str_to_bool(value)
+
+        if is_float(value):
+            value = float(value)
+        if is_integer(value):
+            value = int(value)
+        return value
 
     def _parse_columns(self, df):
         """
