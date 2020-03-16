@@ -145,3 +145,13 @@ class StrictDataFrame:
                 self.dtypes[column] = df[column].dtypes.__str__()
 
         self.new_df = df
+
+    def report(self):
+        """
+        Will print the row difference between the old_df and the new_df
+        generated after parsing the original DataFrame.
+        :return: None
+        """
+        row_dif = self.old_df.shape[0] - self.new_df.shape[0]
+        print(f'DataFrame having shape {self.new_df.shape} ({row_dif} rows '
+              f'removed from original)')
