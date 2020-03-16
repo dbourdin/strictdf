@@ -28,4 +28,19 @@ class StrictDataFrame:
         """
         This will create the new_df by correcting the column dtypes of the
         specified DataFrame.
+        :param df: pd.DataFrame
+        The original DataFrame to be parsed
+        :return: None
+        """
+        self.new_df = df.dropna()
+        self._parse_columns(self.new_df)
+
+    def _parse_columns(self, df):
+        """
+        This will iterate through all the columns that require parsing, infer
+        the data type for that column, and only save elements of that type.
+        :param df: pd.DataFrame
+            The pandas DataFrame that requires columns to be parsed into
+            correct dtype.
+        :return: None
         """
