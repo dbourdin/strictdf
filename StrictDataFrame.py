@@ -19,3 +19,13 @@ class StrictDataFrame:
             raise TypeError(f'Expected DataFrame, got {type(df)} instead')
         self.old_df = df.copy()
         self.new_df = None
+
+        self.dtypes = {column: df.dtypes[column].__str__()
+                       for column in df.columns}
+        self._create_strict_data_frame(df)
+
+    def _create_strict_data_frame(self, df):
+        """
+        This will create the new_df by correcting the column dtypes of the
+        specified DataFrame.
+        """
