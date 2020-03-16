@@ -4,6 +4,7 @@ import pandas as pd
 
 from utils.parsing_utils import is_bool
 from utils.parsing_utils import is_float
+from utils.parsing_utils import is_int_boolean_column
 from utils.parsing_utils import is_integer
 from utils.parsing_utils import str_to_bool
 
@@ -135,6 +136,11 @@ class StrictDataFrame:
                 continue
             if column_type == 'int':
                 df[column] = df[column].astype('int64')
+                # There could be a corner case where all the values are 1/0 and
+                # this could be a bool column instead. Setting column as type
+                # int64 before helps doing this comparison.
+                if is_int_boolean_column(df[column]):
+                    df[column] = df[column].astype('bool')
 
                 self.dtypes[column] = df[column].dtypes.__str__()
 

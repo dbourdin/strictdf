@@ -45,3 +45,16 @@ def is_bool(value):
         Whether the value can or can't be parsed as a boolean.
     """
     return value in ('True', 'true', 'False', 'false')
+
+
+def is_int_boolean_column(column):
+    """
+    :param column: pd.Series
+        The column to be analyzed if it should be converted to bool
+    :return: bool
+        Whether all the int values on the column are 1/0 and can be defined as
+        booleans.
+    """
+    if column.dtype != 'int64':
+        return False
+    return column.isin((0, 1)).all()
