@@ -87,16 +87,16 @@ class StrictDataFrame:
         if not type_counts:
             return
 
-        # Corner case where 2 or more types have the same occurrence.
-        if (len(type_counts) > 1 and type_counts.most_common()[0][1]
-                == type_counts.most_common()[1][1]):
-            print(f'The two most common types '
-                  f'({type_counts.most_common()[0][0]} '
-                  f'{type_counts.most_common()[1][0]}) '
-                  f'have the same amount of occurrences on column '
-                  f'{df_column.name}')
+        most_common_values = type_counts.most_common()
 
-        return type_counts.most_common()[0][0], df_column_copy
+        # Corner case where 2 or more types have the same occurrence.
+        if (len(type_counts) > 1
+                and most_common_values[0][1] == most_common_values[1][1]):
+            print(f'The two most common types ({most_common_values[0][0]}, '
+                  f'{most_common_values[1][0]}) have the same amount of '
+                  f'occurrences on column {df_column.name}')
+
+        return most_common_values[0][0], df_column_copy
 
     @staticmethod
     def _infer_value_type(value):
@@ -133,6 +133,11 @@ class StrictDataFrame:
         columns_to_parse = self._get_columns_to_parse(df)
         for column in columns_to_parse:
             column_type, parsed_column = self._infer_column_type(df[column])
+
+            # Skip if there are no values to be processed in current column
+            if (not (column_type and type(parsed_column) is pd.Series)
+                    or parsed_column.empty):
+                continue
 
             new_column = pd.Series(pd.array(
                 [value if type(value).__name__ == column_type
