@@ -17,12 +17,12 @@ RUN apt-get install -y python3-setuptools
 #RUN apt-get install -y python3-dev
 
 WORKDIR /tmp
-COPY --from=build /app/dist/*.whl /tmp/wheel/
+COPY --from=build /app/dist/*.whl /tmp/strictdf/
 ADD ./jupyter /tmp
 RUN pip install cytoolz==0.8
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-RUN pip install /tmp/wheel/*.whl
+RUN pip install /tmp/strictdf/*.whl
 
 # Setting up volumes
 VOLUME ["/tmp/data", "/tmp/notebook"]
