@@ -26,11 +26,7 @@ class StrictDataFrame:
         if not isinstance(df, pd.DataFrame):
             raise TypeError(f'Expected DataFrame, got {type(df)} instead')
         self._old_df = df.copy()
-        self._new_df = None
-
-        self._dtypes = {column: df.dtypes[column].__str__()
-                        for column in df.columns}
-        self._create_strict_data_frame(df)
+        self._create_strict_data_frame(self._old_df)
 
     @property
     def dtypes(self):
@@ -52,6 +48,8 @@ class StrictDataFrame:
         The original DataFrame to be parsed
         :return: None
         """
+        self._dtypes = {column: df.dtypes[column].__str__()
+                        for column in df.columns}
         self._new_df = df.dropna()
         self._parse_columns(self._new_df)
 
