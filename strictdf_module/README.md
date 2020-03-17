@@ -29,6 +29,7 @@ import pandas as pd
 
 from strictdf.StrictDataFrame import StrictDataFrame
 
+
 df = pd.read_csv('some_csv_file.csv')
 sdf = StrictDataFrame(df)
 ```
