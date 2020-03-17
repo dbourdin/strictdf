@@ -1,0 +1,5 @@
+site_name: StrictDataFrame Documentation
+site_description: Description of the StrictDataFrame module
+theme: readthedocs
+nav:
+- Home: index.md
