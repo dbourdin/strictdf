@@ -25,12 +25,24 @@ class StrictDataFrame:
         """
         if not isinstance(df, pd.DataFrame):
             raise TypeError(f'Expected DataFrame, got {type(df)} instead')
-        self.old_df = df.copy()
-        self.new_df = None
+        self._old_df = df.copy()
+        self._new_df = None
 
-        self.dtypes = {column: df.dtypes[column].__str__()
-                       for column in df.columns}
+        self._dtypes = {column: df.dtypes[column].__str__()
+                        for column in df.columns}
         self._create_strict_data_frame(df)
+
+    @property
+    def dtypes(self):
+        return self._dtypes
+
+    @property
+    def new_df(self):
+        return self._new_df
+
+    @property
+    def old_df(self):
+        return self._old_df
 
     def _create_strict_data_frame(self, df):
         """
@@ -40,8 +52,8 @@ class StrictDataFrame:
         The original DataFrame to be parsed
         :return: None
         """
-        self.new_df = df.dropna()
-        self._parse_columns(self.new_df)
+        self._new_df = df.dropna()
+        self._parse_columns(self._new_df)
 
     @staticmethod
     def _get_columns_to_parse(df):
@@ -132,7 +144,7 @@ class StrictDataFrame:
             df = df.dropna()
 
             if column_type == 'str':
-                self.dtypes[column] = column_type
+                self._dtypes[column] = column_type
                 continue
             if column_type == 'int':
                 df[column] = df[column].astype('int64')
@@ -142,9 +154,9 @@ class StrictDataFrame:
                 if is_int_boolean_column(df[column]):
                     df[column] = df[column].astype('bool')
 
-                self.dtypes[column] = df[column].dtypes.__str__()
+                self._dtypes[column] = df[column].dtypes.__str__()
 
-        self.new_df = df
+        self._new_df = df
 
     def report(self):
         """
@@ -152,6 +164,6 @@ class StrictDataFrame:
         generated after parsing the original DataFrame.
         :return: None
         """
-        row_dif = self.old_df.shape[0] - self.new_df.shape[0]
-        print(f'DataFrame having shape {self.new_df.shape} ({row_dif} rows '
+        row_dif = self._old_df.shape[0] - self._new_df.shape[0]
+        print(f'DataFrame having shape {self._new_df.shape} ({row_dif} rows '
               f'removed from original)')
