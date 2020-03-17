@@ -2,11 +2,11 @@ from collections import Counter
 
 import pandas as pd
 
-from utils.parsing_utils import is_bool
-from utils.parsing_utils import is_float
-from utils.parsing_utils import is_int_boolean_column
-from utils.parsing_utils import is_integer
-from utils.parsing_utils import str_to_bool
+from .utils.parsing_utils import is_bool
+from .utils.parsing_utils import is_float
+from .utils.parsing_utils import is_int_boolean_column
+from .utils.parsing_utils import is_integer
+from .utils.parsing_utils import str_to_bool
 
 
 class StrictDataFrame:
