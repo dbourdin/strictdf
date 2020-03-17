@@ -2,11 +2,11 @@ from collections import Counter
 
 import pandas as pd
 
-from utils.parsing_utils import is_bool
-from utils.parsing_utils import is_float
-from utils.parsing_utils import is_int_boolean_column
-from utils.parsing_utils import is_integer
-from utils.parsing_utils import str_to_bool
+from strictdf.utils.parsing_utils import is_bool
+from strictdf.utils.parsing_utils import is_float
+from strictdf.utils.parsing_utils import is_int_boolean_column
+from strictdf.utils.parsing_utils import is_integer
+from strictdf.utils.parsing_utils import str_to_bool
 
 
 class StrictDataFrame:
@@ -114,6 +114,8 @@ class StrictDataFrame:
         """
         if is_bool(value):
             return str_to_bool(value)
+        if type(value) == bool and value in (True, False):
+            return bool(value)
 
         if is_float(value):
             value = float(value)
@@ -143,9 +145,13 @@ class StrictDataFrame:
             df[column] = new_column
             df = df.dropna()
 
-            if column_type == 'str':
+            if column_type in ('str', 'bool'):
                 self._dtypes[column] = column_type
                 continue
+
+            if column_type == 'float':
+                df[column] = df[column].astype('float64')
+
             if column_type == 'int':
                 df[column] = df[column].astype('int64')
                 # There could be a corner case where all the values are 1/0 and
@@ -153,8 +159,10 @@ class StrictDataFrame:
                 # int64 before helps doing this comparison.
                 if is_int_boolean_column(df[column]):
                     df[column] = df[column].astype('bool')
+                    self._dtypes[column] = 'bool'
+                    continue
 
-                self._dtypes[column] = df[column].dtypes.__str__()
+            self._dtypes[column] = df[column].dtypes.__str__()
 
         self._new_df = df
 
