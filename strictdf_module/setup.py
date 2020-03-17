@@ -20,8 +20,8 @@ setuptools.setup(
     long_description=_long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/dbourdin/strictdf/',
-    packages=setuptools.find_packages('strictdf'),
-    package_dir={'': 'strictdf'},
+    packages=setuptools.find_packages(),
+    package_dir={'': '.'},
     include_package_data=True,
     install_requires=_requirements,
     classifiers=[
