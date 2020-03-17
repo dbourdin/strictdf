@@ -1,3 +1,4 @@
 coverage==5.0.4
+mkdocs==1.1
 pandas==1.0.2
 pytest==5.4.1
