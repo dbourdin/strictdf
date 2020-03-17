@@ -12,19 +12,21 @@ with open(_requirements_file) as f:
     _requirements = f.read().splitlines()
 
 setuptools.setup(
-    name="strictdf",
-    version="0.0.1",
-    author="Damian Bourdin",
-    author_email="damian.bourdin@gmail.com",
-    description="",
+    name='strictdf',
+    version='0.0.1',
+    author='Damian Bourdin',
+    author_email='damian.bourdin@gmail.com',
+    description='',
     long_description=_long_description,
-    long_description_content_type="text/markdown",
-    url="https://github.com/dbourdin/strictdf/",
-    packages=setuptools.find_packages(),
+    long_description_content_type='text/markdown',
+    url='https://github.com/dbourdin/strictdf/',
+    packages=setuptools.find_packages('strictdf'),
+    package_dir={'': 'strictdf'},
+    include_package_data=True,
     install_requires=_requirements,
     classifiers=[
-        "Programming Language :: Python :: 3",
-        "Operating System :: OS Independent",
+        'Programming Language :: Python :: 3',
+        'Operating System :: OS Independent',
     ],
     python_requires='>=3.6',
 )
