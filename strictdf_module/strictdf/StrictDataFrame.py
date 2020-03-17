@@ -112,7 +112,7 @@ class StrictDataFrame:
         """
         if is_bool(value):
             return str_to_bool(value)
-        if type(value) == bool and value in (True, False):
+        if isinstance(value, bool) and value in (True, False):
             return bool(value)
 
         if is_float(value):
@@ -135,7 +135,7 @@ class StrictDataFrame:
             column_type, parsed_column = self._infer_column_type(df[column])
 
             # Skip if there are no values to be processed in current column
-            if (not (column_type and type(parsed_column) is pd.Series)
+            if (not (column_type and isinstance(parsed_column, pd.Series))
                     or parsed_column.empty):
                 continue
 
