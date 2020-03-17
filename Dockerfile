@@ -24,6 +24,9 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 RUN pip install /tmp/wheel/*.whl
 
+# Setting up volumes
+VOLUME ["/tmp/data", "/tmp/notebook"]
+
 # Expose jupyter port
 EXPOSE 8888
 
