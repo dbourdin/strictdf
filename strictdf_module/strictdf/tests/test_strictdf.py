@@ -48,7 +48,7 @@ def test_parse_int_values_from_mixed_int_column():
     df = pd.DataFrame.from_dict({'mixed_column': int_values + non_int_values})
 
     sdf = StrictDataFrame(df)
-    assert all([type(value) == int for value in sdf.new_df.mixed_column])
+    assert all([isinstance(value, int) for value in sdf.new_df.mixed_column])
 
     assert all([any(int(value) == sdf.new_df.mixed_column)
                 for value in int_values])
@@ -72,7 +72,7 @@ def test_parse_float_values_from_mixed_float_column():
     )
 
     sdf = StrictDataFrame(df)
-    assert all([type(value) == float for value in sdf.new_df.mixed_column])
+    assert all([isinstance(value, float) for value in sdf.new_df.mixed_column])
 
     assert all([any(float(value) == sdf.new_df.mixed_column)
                 for value in float_values])
@@ -129,7 +129,7 @@ def test_bool_are_parsed_from_int_bool_column():
     int_bool_values = [1, 0, 0, True]
     df = pd.DataFrame.from_dict({'bool_column': int_bool_values})
     sdf = StrictDataFrame(df)
-    assert all([type(value) == bool for value in sdf.new_df.bool_column])
+    assert all([isinstance(value, bool) for value in sdf.new_df.bool_column])
 
 
 def test_bool_values_are_parsed_correctly_from_strings():
@@ -146,7 +146,8 @@ def test_bool_is_removed_if_is_not_int_bool_column():
     values = [1, 0, 0, 2, True]
     df = pd.DataFrame.from_dict({'int_column': values})
     sdf = StrictDataFrame(df)
-    assert not any([type(value) == bool for value in sdf.new_df.int_column])
+    assert not any([isinstance(value, bool)
+                    for value in sdf.new_df.int_column])
 
 
 def test_report_is_displayed_properly(capsys):
@@ -168,7 +169,7 @@ def test_can_retrieve_dtypes_dict_from_strict_data_frame():
     sdf = StrictDataFrame(df)
 
     dtypes_dict = sdf.dtypes
-    assert type(dtypes_dict) == dict
+    assert isinstance(dtypes_dict, dict)
 
 
 def test_dtypes_are_generated_correctly_for_each_column():
