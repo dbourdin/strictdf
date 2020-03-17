@@ -8,7 +8,10 @@ that column.
 In order to build the `strictdf` dependency you can build the provided
 Dockerfile that will generate the `.whl` file, and copy and install the
 dependency into a new container, running a jupyter notebook, showing the usage
-of the `StrictDataFrame`
+of the `StrictDataFrame`.
+
+The jupyter notebook container will also have a `coverage` directory with the
+results of the test suite execution.
 
 ## Building the docker image
 You can build the docker image using the provided Dockerfile:
